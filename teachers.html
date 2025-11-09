@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Преподаватели - СУХАААРИКИ | Школа программирования</title>
+    <style>
+        /* Дополнительные стили для страницы преподавателей */
+        .teachers-hero {
+            background: linear-gradient(135deg, #91f4d7 0%, #1b5e5b 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .teachers-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .teachers-hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .teachers-intro {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+            text-align: center;
+        }
+        
+        .teachers-intro h2 {
+            color: #1b5e5b;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .teachers-intro p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .teachers-grid {
+            max-width: 1200px;
+            margin: 0 auto 80px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .teacher-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .teacher-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .teacher-photo {
+            height: 250px;
+            background-color: #91f4d7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #1b5e5b;
+        }
+        
+        .teacher-info {
+            padding: 25px;
+        }
+        
+        .teacher-name {
+            color: #1b5e5b;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .teacher-position {
+            color: #666;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .teacher-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .skill-tag {
+            background-color: #e6f7f2;
+            color: #1b5e5b;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .teacher-description {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        .teacher-courses {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        
+        .teacher-courses h4 {
+            color: #1b5e5b;
+            margin-bottom: 10px;
+        }
+        
+        .course-list {
+            list-style-type: none;
+        }
+        
+        .course-list li {
+            margin-bottom: 5px;
+            color: #666;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .course-list li:before {
+            content: "•";
+            color: #1b5e5b;
+            position: absolute;
+            left: 0;
+        }
+        
+        .teaching-approach {
+            background-color: #f9f9f9;
+            padding: 80px 20px;
+            margin-bottom: 80px;
+        }
+        
+        .approach-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .approach-container h2 {
+            text-align: center;
+            color: #1b5e5b;
+            margin-bottom: 50px;
+            font-size: 2rem;
+        }
+        
+        .approach-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .approach-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .approach-icon {
+            font-size: 3rem;
+            color: #1b5e5b;
+            margin-bottom: 20px;
+        }
+        
+        .approach-card h3 {
+            color: #1b5e5b;
+            margin-bottom: 15px;
+        }
+        
+        .join-team {
+            max-width: 800px;
+            margin: 0 auto 80px;
+            padding: 0 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #1b5e5b 0%, #0c2928 100%);
+            color: white;
+            padding: 50px 30px;
+            border-radius: 10px;
+        }
+        
+        .join-team h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .join-team p {
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .cta-button {
+            background-color: white;
+            color: #1b5e5b;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-block;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .cta-button:hover {
+            background-color: #91f4d7;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .teachers-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .teachers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html">СУХАААРИКИ</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="courses.html">Курсы</a></li>
+                <li><a href="teachers.html">Преподаватели</a></li>
+                <li><a href="about.html">О нас</a></li>
+            </ul>
+        </nav>
+        <div class="auth">
+            <button class="login-btn">Войти</button>
+            <button class="register-btn">Регистрация</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="teachers-hero">
+            <h1>Наши преподаватели</h1>
+            <p>Профессионалы из ведущих IT-компаний с многолетним опытом в разработке и преподавании</p>
+        </section>
+
+        <section class="teachers-intro">
+            <h2>Эксперты, которые знают IT изнутри</h2>
+            <p>Все наши преподаватели — практикующие разработчики с опытом работы в известных компаниях. Они не только научат вас программировать, но и поделятся реальным опытом из IT-индустрии.</p>
+        </section>
+
+        <div class="teachers-grid">
+            <div class="teacher-card">
+                <div class="teacher-photo">АС</div>
+                <div class="teacher-info">
+                    <h3 class="teacher-name">Алексей Сухарев</h3>
+                    <p class="teacher-position">Senior Python Developer, Team Lead</p>
+                    <div class="teacher-skills">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Django</span>
+                        <span class="skill-tag">Data Science</span>
+                        <span class="skill-tag">PostgreSQL</span>
+                    </div>
+                    <p class="teacher-description">10+ лет в разработке. Работал в Яндекс и Tinkoff. Специализируется на бэкенд-разработке и архитектуре сложных систем.</p>
+                    <div class="teacher-courses">
+                        <h4>Ведет курсы:</h4>
+                        <ul class="course-list">
+                            <li>Python для начинающих</li>
+                            <li>Продвинутый Python</li>
+                            <li>Django: создание веб-приложений</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="teacher-card">
+                <div class="teacher-photo">МП</div>
+                <div class="teacher-info">
+                    <h3 class="teacher-name">Мария Петрова</h3>
+                    <p class="teacher-position">Frontend Developer, UX/UI Designer</p>
+                    <div class="teacher-skills">
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Vue.js</span>
+                        <span class="skill-tag">UI/UX Design</span>
+                    </div>
+                    <p class="teacher-description">8 лет в веб-разработке. Работала в Avito и Ozon. Создавала интерфейсы для миллионов пользователей.</p>
+                    <div class="teacher-courses">
+                        <h4>Ведет курсы:</h4>
+                        <ul class="course-list">
+                            <li>JavaScript с нуля</li>
+                            <li>React: современная разработка</li>
+                            <li>UI/UX дизайн для разработчиков</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="teacher-card">
+                <div class="teacher-photo">ДК</div>
+                <div class="teacher-info">
+                    <h3 class="teacher-name">Дмитрий Козлов</h3>
+                    <p class="teacher-position">Full-Stack Developer, DevOps Engineer</p>
+                    <div class="teacher-skills">
+                        <span class="skill-tag">Node.js</span>
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">AWS</span>
+                    </div>
+                    <p class="teacher-description">Full-stack разработчик с 8-летним опытом. Специализируется на создании масштабируемых приложений и DevOps практиках.</p>
+                    <div class="teacher-courses">
+                        <h4>Ведет курсы:</h4>
+                        <ul class="course-list">
+                            <li>Full-stack JavaScript</li>
+                            <li>DevOps для разработчиков</li>
+                            <li>Подготовка к техническим собеседованиям</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="teacher-card">
+                <div class="teacher-photo">ЕС</div>
+                <div class="teacher-info">
+                    <h3 class="teacher-name">Елена Смирнова</h3>
+                    <p class="teacher-position">Data Scientist, ML Engineer</p>
+                    <div class="teacher-skills">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Machine Learning</span>
+                        <span class="skill-tag">TensorFlow</span>
+                        <span class="skill-tag">SQL</span>
+                    </div>
+                    <p class="teacher-description">Кандидат технических наук. 7 лет в Data Science. Работала над проектами в Сбере и МТС. Специализируется на ML и анализе данных.</p>
+                    <div class="teacher-courses">
+                        <h4>Ведет курсы:</h4>
+                        <ul class="course-list">
+                            <li>Введение в Data Science</li>
+                            <li>Машинное обучение на Python</li>
+                            <li>Анализ данных с Pandas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="teacher-card">
+                <div class="teacher-photo">ИВ</div>
+                <div class="teacher-info">
+                    <h3 class="teacher-name">Иван Васильев</h3>
+                    <p class="teacher-position">Mobile Developer, iOS/Android</p>
+                    <div class="teacher-skills">
+                        <span class="skill-tag">Swift</span>
+                        <span class="skill-tag">Kotlin</span>
+                        <span class="skill-tag">React Native</span>
+                        <span class="skill-tag">Flutter</span>
+                    </div>
+                    <p class="teacher-description">6 лет в мобильной разработке. Создавал приложения для Kaspersky и Delivery Club. Эксперт в кроссплатформенной разработке.</p>
+                    <div class="teacher-courses">
+                        <h4>Ведет курсы:</h4>
+                        <ul class="course-list">
+                            <li>Разработка под iOS</li>
+                            <li>Android с нуля</li>
+                            <li>Кроссплатформенная разработка</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="teacher-card">
+                <div class="teacher-photo">ОЛ</div>
+                <div class="teacher-info">
+                    <h3 class="teacher-name">Ольга Лебедева</h3>
+                    <p class="teacher-position">QA Engineer, Test Automation</p>
+                    <div class="teacher-skills">
+                        <span class="skill-tag">Selenium</span>
+                        <span class="skill-tag">Cypress</span>
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">Jest</span>
+                    </div>
+                    <p class="teacher-description">5+ лет в тестировании. Работала в Lamoda и Wildberries. Специализируется на автоматизации тестирования веб-приложений.</p>
+                    <div class="teacher-courses">
+                        <h4>Ведет курсы:</h4>
+                        <ul class="course-list">
+                            <li>Тестирование ПО для начинающих</li>
+                            <li>Автоматизация тестирования</li>
+                            <li>QA Engineer: полный курс</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="teaching-approach">
+            <div class="approach-container">
+                <h2>Наш подход к обучению</h2>
+                <div class="approach-grid">
+                    <div class="approach-card">
+                        <div class="approach-icon">🎯</div>
+                        <h3>Практическая направленность</h3>
+                        <p>Все занятия строятся вокруг реальных проектов и задач из IT-индустрии</p>
+                    </div>
+                    <div class="approach-card">
+                        <div class="approach-icon">👥</div>
+                        <h3>Индивидуальный подход</h3>
+                        <p>Небольшие группы и персональная обратная связь от преподавателей</p>
+                    </div>
+                    <div class="approach-card">
+                        <div class="approach-icon">🚀</div>
+                        <h3>Актуальные технологии</h3>
+                        <p>Изучаем только востребованные инструменты и фреймворки</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="join-team">
+            <h2>Хотите стать частью нашей команды?</h2>
+            <p>Мы всегда рады талантливым разработчикам, готовым делиться знаниями. Присоединяйтесь к команде преподавателей СУХАААРИКИ!</p>
+            <a href="#" class="cta-button">Отправить резюме</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>2025 СУХАААРИКИ. Все права защищены.</p>
+    </footer>
+</body>
+</html>
