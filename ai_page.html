@@ -1,69 +1,193 @@
-<html>
-    <DOCTYPE html>
-        <html lang="ru">
-          <head>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    </head>
-    <body>
-        <div>Teachable Machine Image Model</div>
-<button type="button" onclick="init()">Start</button>
-<div id="webcam-container"></div>
-<div id="label-container"></div>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
-<script type="text/javascript">
-    // More API functions here:
-    // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
-
-    // the link to your model provided by Teachable Machine export panel
-    const URL = "./my_model/";
-
-    let model, webcam, labelContainer, maxPredictions;
-
-    // Load the image model and setup the webcam
-    async function init() {
-        const modelURL = URL + "model.json";
-        const metadataURL = URL + "metadata.json";
-
-        // load the model and metadata
-        // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-        // or files from your local hard drive
-        // Note: the pose library adds "tmImage" object to your window (window.tmImage)
-        model = await tmImage.load(modelURL, metadataURL);
-        maxPredictions = model.getTotalClasses();
-
-        // Convenience function to setup a webcam
-        const flip = true; // whether to flip the webcam
-        webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
-        await webcam.setup(); // request access to the webcam
-        await webcam.play();
-        window.requestAnimationFrame(loop);
-
-        // append elements to the DOM
-        document.getElementById("webcam-container").appendChild(webcam.canvas);
-        labelContainer = document.getElementById("label-container");
-        for (let i = 0; i < maxPredictions; i++) { // and class labels
-            labelContainer.appendChild(document.createElement("div"));
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teachable Machine Image Model</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
         }
-    }
-
-    async function loop() {
-        webcam.update(); // update the webcam frame
-        await predict();
-        window.requestAnimationFrame(loop);
-    }
-
-    // run the webcam image through the image model
-    async function predict() {
-        // predict can take in an image, video or canvas html element
-        const prediction = await model.predict(webcam.canvas);
-        for (let i = 0; i < maxPredictions; i++) {
-            const classPrediction =
-                prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-            labelContainer.childNodes[i].innerHTML = classPrediction;
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
         }
-    }
-</script>
-    </body>
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #webcam-container {
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            width: 200px;
+            height: 200px;
+        }
+        #label-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .prediction {
+            background-color: #f5f5f5;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            width: 300px;
+            text-align: left;
+        }
+        .prediction-bar {
+            height: 20px;
+            background-color: #4CAF50;
+            margin-top: 5px;
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+        .error {
+            color: #d32f2f;
+            background-color: #ffcdd2;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Teachable Machine Image Model</h1>
+    <button type="button" id="start-btn">Start</button>
+    <div id="webcam-container"></div>
+    <div id="label-container"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script type="text/javascript">
+        // URL для вашей модели (замените на путь к вашей модели)
+        const URL = "https://teachablemachine.withgoogle.com/models/Q6-D4IAcF/";
+        
+        let model, webcam, labelContainer, maxPredictions;
+        let isRunning = false;
+        const startButton = document.getElementById('start-btn');
+        
+        // Загрузка модели и настройка веб-камеры
+        async function init() {
+            try {
+                startButton.disabled = true;
+                startButton.textContent = 'Loading...';
+                
+                // Очистка предыдущих элементов
+                document.getElementById('webcam-container').innerHTML = '';
+                document.getElementById('label-container').innerHTML = '';
+                
+                const modelURL = URL + "model.json";
+                const metadataURL = URL + "metadata.json";
+                
+                // Загрузка модели и метаданных
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
+                
+                // Настройка веб-камеры
+                const flip = true; // зеркальное отображение веб-камеры
+                webcam = new tmImage.Webcam(200, 200, flip); // ширина, высота, зеркальное отображение
+                await webcam.setup(); // запрос доступа к веб-камере
+                await webcam.play();
+                
+                // Добавление элементов в DOM
+                document.getElementById('webcam-container').appendChild(webcam.canvas);
+                
+                // Создание контейнеров для предсказаний
+                labelContainer = document.getElementById('label-container');
+                for (let i = 0; i < maxPredictions; i++) {
+                    const predictionDiv = document.createElement('div');
+                    predictionDiv.className = 'prediction';
+                    const predictionText = document.createElement('div');
+                    predictionText.id = 'prediction-' + i;
+                    const predictionBar = document.createElement('div');
+                    predictionBar.className = 'prediction-bar';
+                    predictionBar.id = 'prediction-bar-' + i;
+                    predictionDiv.appendChild(predictionText);
+                    predictionDiv.appendChild(predictionBar);
+                    labelContainer.appendChild(predictionDiv);
+                }
+                
+                isRunning = true;
+                startButton.textContent = 'Stop';
+                startButton.disabled = false;
+                
+                // Запуск цикла предсказаний
+                window.requestAnimationFrame(loop);
+                
+            } catch (error) {
+                console.error('Error initializing:', error);
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.textContent = 'Error: ' + error.message;
+                document.getElementById('label-container').appendChild(errorDiv);
+                startButton.disabled = false;
+                startButton.textContent = 'Start';
+            }
+        }
+        
+        // Основной цикл
+        async function loop() {
+            if (isRunning) {
+                webcam.update(); // обновление кадра веб-камеры
+                await predict();
+                window.requestAnimationFrame(loop);
+            }
+        }
+        
+        // Запуск предсказания на основе изображения с веб-камеры
+        async function predict() {
+            // Предсказание может принимать изображение, видео или canvas элемент
+            const prediction = await model.predict(webcam.canvas);
+            for (let i = 0; i < maxPredictions; i++) {
+                const probability = prediction[i].probability.toFixed(2);
+                const classPrediction = prediction[i].className + ": " + probability;
+                document.getElementById('prediction-' + i).innerHTML = classPrediction;
+                document.getElementById('prediction-bar-' + i).style.width = (probability * 100) + '%';
+            }
+        }
+        
+        // Остановка веб-камеры
+        function stop() {
+            if (webcam) {
+                webcam.stop();
+            }
+            isRunning = false;
+            startButton.textContent = 'Start';
+        }
+        
+        // Обработчик клика по кнопке
+        startButton.addEventListener('click', function() {
+            if (isRunning) {
+                stop();
+            } else {
+                init();
+            }
+        });
+    </script>
+</body>
 </html>
